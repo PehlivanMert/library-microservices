@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -24,7 +25,7 @@ public class Book {
     private String title;
 
     @NotNull(message = "Book year is required")
-    @Past(message = "Book year must be in the past")
+    @Min(value = 1000, message = "Book year must be a valid year")
     private int bookYear;
 
     @NotBlank(message = "Author is required")

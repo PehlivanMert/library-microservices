@@ -1,6 +1,6 @@
 spring:
   application:
-    name: gateway-service
+    name: api-gateway-service
   cloud:
     gateway:
       routes:
@@ -17,8 +17,9 @@ spring:
           enabled: true
   zipkin:
     base-url: http://localhost:9411
+
 server:
-  port: 8888
+  port: 8080
 
 eureka:
   client:
@@ -28,46 +29,28 @@ eureka:
   instance:
     prefer-ip-address: true
 
+# Yapılandırma Açıklamaları:
+# `cloud:`: Bu bölüm, bulut altyapısına yönelik yapılandırmaları içerir.
+#     - `gateway:`: Bu, ağ geçidi (gateway) yapılandırmasını belirtir.
+#          - `routes:`: Bu, ağ geçidi üzerinden yönlendirilecek hedefleri tanımlar.
+#               - `id: book-service`: Bu, yönlendirme için kullanılan servisin kimliğini tanımlar.
+#                        - `uri: lb://book-service`: Bu, hedef servisin URI'sini belirtir. "lb://" ifadesi, yük dengeleyici (load balancer) kullanıldığını gösterir.
+#                        - `predicates:`: Bu, yönlendirmenin hangi ölçütlere göre yapılacağını belirtir.
+#                             - `Path=/v1/book/**`: Bu, istek URL'sinin belirli bir desenle eşleşmesi gerektiğini belirtir.
+#    `discovery:`: Bu bölüm, servis keşfi ile ilgili yapılandırmaları içerir.
+#       - `locator:`: Bu, servislerin isimlerine göre otomatik olarak yönlendirilip yönlendirilmeyeceğini belirtir.
+#            - `enabled: true`: Bu, isim tabanlı yönlendirme (service discovery locator) özelliğinin aktif olduğunu belirtir.
+#    `eureka:`: Bu bölüm, Eureka servis keşfi için yapılandırmaları içerir.
+#       - `client:`: Bu, Eureka istemci yapılandırmasını içerir.
+#            - `register-with-eureka: true`: Bu, servisin Eureka sunucusuna kaydolup kaydolmayacağını belirtir.
+#            - `service-url:`: Bu, Eureka sunucusunun hizmet URL'sini belirtir.
+#                 - `defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}`: Bu, varsayılan Eureka sunucu adresini belirtir. Eğer `EUREKA_URI` ortam değişkeni tanımlı değilse `http://localhost:8761/eureka` kullanılır.
+#       - `instance:`: Bu, Eureka istemcisine ait örnek yapılandırmalarını içerir.
+#            - `prefer-ip-address: true`: Bu, Eureka'nın hostname yerine IP adresini kullanmasını sağlar.
+
 management: # Actuator endpoint'lerini yapilandir
   endpoints: #http://localhost:8888/actuator
     web:
       exposure:
         include: "*" # Tum end pointleri ekle
         exclude: info # info endpoint'ini ekleme
-
-
-        #  `cloud:`: Bu b�l�m, bulut altyap?s?na y�nelik yap?land?rmalar? i�erir.
-        #
-        #      - `gateway:`: Bu, a? ge�idi (gateway) yap?land?rmas?n? belirtir.
-        #
-        #           - `routes:`: Bu, a? ge�idi �zerinden y�nlendirilecek hedefleri tan?mlar.
-        #
-        #                - `id: book-service`: Bu, y�nlendirme i�in kullan?lan servisin kimli?ini tan?mlar.
-        #
-        #                         - `uri: lb://book-service`: Bu, hedef servisin URI'sini belirtir. "lb://" ifadesi, y�k dengeleyici (load balancer) kullan?ld???n? g�sterir.
-        #
-        #                         - `predicates:`: Bu, y�nlendirmenin hangi �l��tlere g�re yap?laca??n? belirtir.
-        #
-        #                              - `Path=/v1/book/**`: Bu, istek URL'sinin belirli bir desenle e?le?mesi gerekti?ini belirtir.
-        #
-        #     `discovery:`: Bu b�l�m, servis ke?fi ile ilgili yap?land?rmalar? i�erir.
-        #
-        #        - `locator:`: Bu, servislerin isimlerine g�re otomatik olarak y�nlendirilip y�nlendirilmeyece?ini belirtir.
-        #
-        #             - `enabled: true`: Bu, isim tabanl? y�nlendirme (service discovery locator) �zelli?inin aktif oldu?unu belirtir.
-        #
-        #
-        #
-        #     `eureka:`: Bu b�l�m, Eureka servis ke?fi i�in yap?land?rmalar? i�erir.
-        #
-        #        - `client:`: Bu, Eureka istemci yap?land?rmas?n? i�erir.
-        #
-        #             - `register-with-eureka: true`: Bu, servisin Eureka sunucusuna kaydolup kaydolmayaca??n? belirtir.
-        #
-        #             - `service-url:`: Bu, Eureka sunucusunun hizmet URL'sini belirtir.
-        #
-        #                  - `defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}`: Bu, varsay?lan Eureka sunucu adresini belirtir. E?er `EUREKA_URI` ortam de?i?keni tan?ml? de?ilse `http://localhost:8761/eureka` kullan?l?r.
-        #
-        #        - `instance:`: Bu, Eureka istemcisine ait �rnek yap?land?rmalar?n? i�erir.
-        #
-        #             - `prefer-ip-address: true`: Bu, Eureka?n?n hostname yerine IP adresini kullanmas?n? sa?lar.
